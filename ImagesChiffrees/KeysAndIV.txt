@@ -1,0 +1,13 @@
+
+Mode operatoire ECB 
+Generated key : 0xef394ae1cf59c44e4655d09526bd287569ec6a61d9ffa2d46f90fa473dda7ab9
+
+
+Mode operatoire : CBC
+Generated key : 0x86d29183ad0459b53c1116f6dcada68daf25f7d30f57f160c7cf8af295d01aab
+Generated iv :  0x1df64402a6153818d0fed545e3573800
+
+
+Mode opératoire : PCBC
+Generated key : 0xfb1b025e711fd37a95f70cd8729c6934c364569e304ecc43695c3f7652e80525
+Generated iv :  0xc185561c59d33c8d7edb806453c097c5
