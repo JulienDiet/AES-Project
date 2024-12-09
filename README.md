@@ -74,14 +74,5 @@ substitution.py			# Substitution and inverse substitution functions
    ```bash
    python -m unittest discover tests
    ```
-
-## Tests
-
-The `tests/` folder contains unit tests to ensure the correctness of all implemented functions. Use the following command to execute tests:
-
-```bash
-python -m unittest discover tests
-```
-
 ##
 
