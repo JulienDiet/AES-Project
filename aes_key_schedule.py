@@ -100,10 +100,3 @@ def key_schedule(original_key, length, substitution_box):
         words.append(words[i - nb_words] ^ temp)
 
     return words
-
-
-# Example of using the key schedule function
-original_key = b'\x2b\x7e\x15\x16\x28\xae\xd2\xa6\xab\xf7\x97\x75\x46\xdc\x6d\x8a'
-substitution_box = load_substitution_box()
-key_schedule_result = key_schedule(original_key, 128, substitution_box)
-print(key_schedule_result)
