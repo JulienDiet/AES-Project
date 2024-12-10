@@ -41,7 +41,6 @@ def encrypt_ecb(blocks, key, security):
     return encrypted_blocks
 
 
-
 def decrypt_ecb(blocks, key, security):
     """
     This function decrypts a list of 128-bit blocks which have been previously encrypted
@@ -56,7 +55,6 @@ def decrypt_ecb(blocks, key, security):
         decrypted_block = aes_decrypt_block(block, key, security)
         decrypted_blocks.append(decrypted_block)
     return decrypted_blocks
-
 
 
 def encrypt_cbc(blocks, key, security):
