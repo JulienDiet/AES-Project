@@ -105,13 +105,15 @@ def mix_columns(matrix):
     :param matrix: a 4x4 bytes matrix
     :return: a 4x4 bytes matrix as the result of the mix columns operation
     """
-    result = []
-    for col in range(4):
-        mixed = []
-        for row in range(4):
-            mixed.append(matrix[row][col])
-        result.append(mixed)
-    return result
+    for c in range(4):
+        # Extraire la colonne c
+        col = [matrix[r][c] for r in range(4)]
+        # Appliquer mix_column sur cette colonne
+        mixed_col = mix_column(col)
+        # Remettre la colonne transformée dans la matrice
+        for r in range(4):
+            matrix[r][c] = mixed_col[r]
+    return matrix
 
 
 def inv_mix_columns(matrix):
@@ -121,13 +123,15 @@ def inv_mix_columns(matrix):
     :param matrix: a 4x4 bytes matrix
     :return: a 4x4 bytes matrix as the result of the inverted AES mix columns operation
     """
-    result = []
-    for col in range(4):
-        mixed = []
-        for row in range(4):
-            mixed.append(matrix[row][col])
-        result.append(mixed)
-    return result
+    for c in range(4):
+        # Extraire la colonne c
+        col = [matrix[r][c] for r in range(4)]
+        # Appliquer inv_mix_column sur cette colonne
+        mixed_col = inv_mix_column(col)
+        # Remettre la colonne transformée dans la matrice
+        for r in range(4):
+            matrix[r][c] = mixed_col[r]
+    return matrix
 
 
 def aes_round(blockmatrix, key_matrix, substitution_box):
