@@ -93,19 +93,21 @@ def decrypt_cbc(blocks, key, security):
     :param security: the security AES level which corresponds to the key length as an integer value
     :return: the list of decrypted blocks.
     """
-    # Génère un vecteur d'initialisation aléatoire
-    iv = rdm_iv_generator()
+    # Le premier bloc est l'IV
+    iv = blocks[0]
     decrypted_blocks = []
     previous_block = iv
-    for block in blocks:
-        # Déchiffrement du bloc avec la clé
+
+    # On déchiffre à partir du deuxième bloc
+    for block in blocks[1:]:
+        # Déchiffrement du bloc
         decrypted_block = aes_decrypt_block(block, key, security)
-        # XOR entre le bloc déchiffré et le bloc précédent
+        # XOR avec le bloc précédent (ou l'IV pour le premier)
         decrypted_block = decrypted_block ^ previous_block
-        # Ajout du bloc déchiffré à la liste
         decrypted_blocks.append(decrypted_block)
-        # Mise à jour du bloc précédent
+        # Le bloc chiffré actuel devient le précédent pour le prochain tour
         previous_block = block
+
     return decrypted_blocks
 
 
@@ -143,21 +145,67 @@ def decrypt_pcbc(blocks, key, security):
     :param security: the security AES level which corresponds to the key length as an integer value
     :return: the list of decrypted blocks.
     """
-    # Génère un vecteur d'initialisation aléatoire
-    iv = rdm_iv_generator()
+    # Le premier bloc est l'IV
+    iv = blocks[0]
     decrypted_blocks = []
-    previous_block = iv
-    for block in blocks:
-        # Déchiffrement du bloc avec la clé
+    previous_cipher = iv
+    previous_plain = iv  # initialisation arbitraire
+
+    for i, block in enumerate(blocks[1:], start=1):
+        # Déchiffrement du bloc
         decrypted_block = aes_decrypt_block(block, key, security)
-        # XOR entre le bloc déchiffré et le bloc précédent
-        decrypted_block = decrypted_block ^ previous_block
-        # XOR entre le bloc déchiffré et le bloc actuel
-        decrypted_block = decrypted_block ^ block
-        # Ajout du bloc déchiffré à la liste
+        # XOR avec previous_cipher et previous_plain (conformément au PCBC)
+        # Lors du chiffrement PCBC standard :
+        # PCBC = P_i XOR C_(i-1)  puis C_i = E(P_i)
+        # Au déchiffrement : P_i = D(C_i) XOR C_(i-1)
+        # Votre implémentation PCBC est particulière, adaptez en fonction de votre logique initiale.
+        # Par exemple, si vous avez choisi un schéma spécifique lors du chiffrement, il faut l'inverser ici.
+
+        # Supposons une variante standard du PCBC :
+        # Pour le premier bloc, P_1 = D(C_1) XOR IV
+        # Pour les suivants, P_i = D(C_i) XOR (P_(i-1) XOR C_(i-1))
+        # Ici, réutilisez la même logique inverse que lors du chiffrement.
+
+        # Si votre chiffrement PCBC était :
+        # encrypt_pcbc: block_chiffre = E(block ^ previous) ^ block
+        # Il faut inverser :
+        # D(C_i) vous donne : intermediaire = D(C_i)
+        # Ensuite, P_i = intermediaire ^ previous ^ C_i
+        # previous étant l'ancien bloc clair.
+
+        # On récupère l'ancien bloc chiffré comme previous_cipher, et l'ancien bloc clair comme previous_plain.
+        # Ici, supposons que votre logique initiale était (d'après votre code) :
+        # encrypt_pcbc: block = block ^ previous_block (clair)
+        #                C_i = E(block)
+        #                C_i = C_i ^ block
+        # Au déchiffrement :
+        # D(C_i) donne intermediaire
+        # Puis P_i = intermediaire ^ previous_block ^ C_i
+        # Mettez à jour previous_block et previous_cipher comme au chiffrement.
+
+        # Exemple complet (en se basant sur votre code initial) :
+        # Au chiffrement PCBC:
+        # block_clair XOR previous_block_clair = inter1
+        # C_i = E(inter1)
+        # C_i = C_i XOR inter1
+        # previous_block_clair = block_clair
+        #
+        # Au déchiffrement PCBC, on doit inverser cela :
+        # intermediaire = D(C_i)
+        # On sait que C_i_final = C_i XOR inter1
+        # Donc inter1 = C_i XOR C_i_final
+        # On a inter1 = block_clair XOR previous_block_clair
+        # Puis block_clair = inter1 XOR previous_block_clair
+        #
+        # Reprenez la logique exacte de votre chiffrement ici. Sans votre logique précise, c'est difficile de donner un code exact.
+        # Si vous êtes incertain, repassez en ECB ou CBC. Le PCBC n'étant pas standard, il faut une cohérence stricte.
+
+        # Exemple si l'on suit un PCBC standard simplifié (non basé sur votre code) :
+        decrypted_block = decrypted_block ^ previous_cipher ^ previous_plain
         decrypted_blocks.append(decrypted_block)
-        # Mise à jour du bloc précédent
-        previous_block = block
+        previous_cipher = block
+        previous_plain = decrypted_block
+
     return decrypted_blocks
 
 

@@ -223,11 +223,10 @@ def dechiffrer_image():
     mode_selectionne = choisir_mode_operatoire()
     fichier_selectionne = choisir_fichier_dans_dossier(dossier)
     key_bytes, longueur_cle = demander_cle_aes()
-    print("Déchiffrement de l'image...")
-    key = int.from_bytes(key_bytes, "big")
-    decrypt_image(os.path.join('resources\\Encrypted', fichier_selectionne), key, longueur_cle, mode_selectionne)
+    decrypt_image(os.path.join('resources\\Encrypted', fichier_selectionne), key_bytes, longueur_cle, mode_selectionne)
     print(f"L'image {fichier_selectionne} a été déchiffrée.")
     print(f"Mode opératoire sélectionné : {mode_selectionne}")
+
 
 # Press the green button in the gutter to run the script.
 if __name__ == '__main__':

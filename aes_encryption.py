@@ -47,7 +47,7 @@ def aes_encrypt_block(block, key, aes_key_length):
     block_matrix = aes_final_round(block_matrix, final_key_matrix, substitution_box)
 
     # Convert matrix back to 128-bit word
-    encrypted_block = bytes_matrix_to_word128bits(block_matrix).to_bytes(16, byteorder='big')
+    encrypted_block = bytes_matrix_to_word128bits(block_matrix)
     return encrypted_block
 
 
@@ -65,7 +65,7 @@ def aes_decrypt_block(block, key, aes_key_length):
     num_rounds = compute_round_count(aes_key_length)
 
     # Convert block to matrix
-    block_matrix = word128bits_to_bytes_matrix(int.from_bytes(block, byteorder='big'))
+    block_matrix = word128bits_to_bytes_matrix(block)
 
     # Initial XOR
     block_matrix = matrix_xor(block_matrix, column_to_matrix(*round_keys[num_rounds * 4:(num_rounds + 1) * 4]))
@@ -80,5 +80,5 @@ def aes_decrypt_block(block, key, aes_key_length):
     block_matrix = aes_inverse_final_round(block_matrix, initial_key_matrix, inverse_substitution_box_data)
 
     # Convert matrix back to 128-bit word
-    decrypted_block = bytes_matrix_to_word128bits(block_matrix).to_bytes(16, byteorder='big')
+    decrypted_block = bytes_matrix_to_word128bits(block_matrix)
     return decrypted_block

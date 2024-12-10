@@ -43,6 +43,10 @@ def original_key_to_word32bits(original_key, length):
     :param length: the number of bits as an integer value
     :return: an array containing the 32-bit words that make up the key
     """
+    # Si original_key est un entier, on le convertit en bytes
+    if isinstance(original_key, int):
+        original_key = original_key.to_bytes(length // 8, 'big')
+
     if length == 128:
         nb_words = 4
     elif length == 192:
@@ -56,7 +60,6 @@ def original_key_to_word32bits(original_key, length):
         raise ValueError(f"The original key must be {length // 8} bytes long.")
 
     words = [int.from_bytes(original_key[i * 4:(i + 1) * 4], "big") for i in range(nb_words)]
-
     return words
 
 
