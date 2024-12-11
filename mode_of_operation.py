@@ -109,6 +109,20 @@ def encrypt_pcbc(blocks, key, security):
     :param security: the security AES level which corresponds to the key length as an integer value
     :return: the list of encrypted blocks.
     """
+    iv = rdm_iv_generator()  # Generate random IV
+    encrypted_blocks = []
+    previous_block = iv
+
+    for block in blocks:
+        # XOR the plaintext block with the previous block
+        block_to_encrypt = block ^ previous_block
+        # Encrypt the result
+        encrypted_block = aes_encrypt_block(block_to_encrypt, key, security)
+        encrypted_blocks.append(encrypted_block)
+        # Update the previous block with the XOR of the plaintext and ciphertext
+        previous_block = block ^ encrypted_block
+
+    return [iv] + encrypted_blocks
 
 
 def decrypt_pcbc(blocks, key, security):
@@ -120,6 +134,21 @@ def decrypt_pcbc(blocks, key, security):
     :param security: the security AES level which corresponds to the key length as an integer value
     :return: the list of decrypted blocks.
     """
+    iv = blocks[0]  # Extract the IV
+    encrypted_blocks = blocks[1:]
+    decrypted_blocks = []
+    previous_block = iv
+
+    for encrypted_block in encrypted_blocks:
+        # Decrypt the ciphertext block
+        decrypted_block = aes_decrypt_block(encrypted_block, key, security)
+        # XOR the result with the previous block to retrieve the plaintext
+        plaintext_block = decrypted_block ^ previous_block
+        decrypted_blocks.append(plaintext_block)
+        # Update the previous block with the XOR of the plaintext and ciphertext
+        previous_block = plaintext_block ^ encrypted_block
+
+    return decrypted_blocks
 
 
 
