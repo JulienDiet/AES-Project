@@ -84,6 +84,7 @@ def encrypt_image(path, key, security, operation_mode="ECB"):
 
     image_from_bytes_to_file(cipher_bytes, img_shape, os.path.join(directory, filename))
 
+
 def demander_iv_aes():
     """
     Demande à l'utilisateur d'encoder la clé AES de chiffrement en hexadécimal.

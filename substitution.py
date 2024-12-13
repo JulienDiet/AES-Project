@@ -1,7 +1,7 @@
 def load_substitution_box():
     """
-    This function loads the values from the "data.txt" file and places them in a 16x16 matrix
-    :return: a 16x16 matrix corresponding to the AES substitution box
+    Cette fonction charge les valeurs du fichier "data.txt" et les place dans une matrice 16x16.
+    :return: une matrice 16x16 correspondant à la boîte de substitution AES
     """
     substitution_box = []
 
@@ -15,9 +15,9 @@ def load_substitution_box():
 
 def inverse_substitution_box(substitution_box):
     """
-    This function builds the AES inverse substitution box based on the AES substitution box
-    :param substitution_box: the AES substitution box as a 16x16 matrix
-    :return: the inverse AES substitution box as a 16x16 matrix
+    Cette fonction construit la boîte de substitution inverse d'AES à partir de la boîte de substitution AES.
+    :param substitution_box: la boîte de substitution AES sous forme de matrice 16x16
+    :return: la boîte de substitution inverse d'AES sous forme de matrice 16x16
     """
     inverse_box = [[0] * 16 for _ in range(16)]
 
@@ -30,10 +30,10 @@ def inverse_substitution_box(substitution_box):
 
 def substitution(box, value):
     """
-    This function executes the substitution.
-    :param box: the substitution box
-    :param value: the value to be substituted
-    :return: the output value from the substitution box corresponding to the input value
+    Cette fonction exécute la substitution.
+    :param box: la boîte de substitution
+    :param value: la valeur à substituer
+    :return: la valeur de sortie provenant de la boîte de substitution correspondant à la valeur d'entrée
     """
     row = value >> 4
     col = value & 0x0F

@@ -1,14 +1,13 @@
 from gf256_multiplication import *
-from substitution import *
 
 
 def matrix_xor(matrix, key):
     """
-    This function performs XOR operation on bytes from the matrix given as arguments.
-    :param matrix: a 4x4 bytes matrix
-    :param key: a 4x4 bytes matrix
-    :return: a 4x4 bytes matrix containing the XOR result between the corresponding bytes of
-             the matrix received as arguments
+    Cette fonction effectue une opération XOR sur les octets des matrices données en arguments.
+    :param matrix: une matrice de 4x4 octets
+    :param key: une matrice de 4x4 octets
+    :return: une matrice de 4x4 octets contenant le résultat du XOR entre les octets correspondants
+             des matrices reçues en arguments
     """
     if len(matrix) != 4 or len(key) != 4:
         raise ValueError("Both matrices must be 4x4.")
@@ -26,10 +25,10 @@ def matrix_xor(matrix, key):
 
 def sub_bytes(matrix, substitution_box):
     """
-    This function performs the substitution on byte from the matrix given as argument.
-    :param matrix: a 4x4 bytes matrix
-    :param substitution_box: the AES substitution box
-    :return: a 4x4 bytes matrix consisting of the substituted bytes of the matrix given as argument.
+    Cette fonction effectue la substitution des octets de la matrice donnée en argument.
+    :param matrix: une matrice de 4x4 octets
+    :param substitution_box: la boîte de substitution AES
+    :return: une matrice de 4x4 octets contenant les octets substitués de la matrice donnée en argument.
     """
     for i in range(len(matrix)):
         for j in range(len(matrix[i])):
@@ -42,9 +41,10 @@ def sub_bytes(matrix, substitution_box):
 
 def shift_rows(matrix):
     """
-    This function performs the AES shift rows operation on the matrix given as argument.
-    See the AES documentation referenced in the instructions and the HELMo Learn website for the operation details.
-    :param matrix: a 4x4 bytes matrix
+    Cette fonction effectue l'opération de décalage des lignes (shift rows) d'AES sur la matrice donnée en argument.
+    Consultez la documentation AES référencée dans les instructions et le site HELMo Learn pour les détails de
+    l'opération.
+    :param matrix: une matrice de 4x4 octets
     """
     return [
         matrix[0],
@@ -56,9 +56,11 @@ def shift_rows(matrix):
 
 def inv_shift_rows(matrix):
     """
-    This function performs the inverted AES shift rows operation on the matrix given as argument.
-    See the AES documentation referenced in the instructions and the HELMo Learn website for the operation details.
-    :param matrix: a 4x4 bytes matrix
+    Cette fonction effectue l'opération inverse de décalage des lignes (shift rows) d'AES sur la matrice
+    donnée en argument.
+    Consultez la documentation AES référencée dans les instructions et le site HELMo Learn pour les détails
+    de l'opération.
+    :param matrix: une matrice de 4x4 octets
     """
     return [
         matrix[0],
@@ -70,10 +72,12 @@ def inv_shift_rows(matrix):
 
 def mix_column(r):
     """
-    This function performs polynomial multiplication 3x^3+x^2+x+2 (modulo x^4+1) with bytes in GF(2^8) as coefficient.
-    See the AES documentation referenced in the instructions and the HELMo Learn website for the operation details.
-    :param r: a column composed of 4 bytes
-    :return: the result of mix column as a column composed of 4 bytes
+    Cette fonction effectue la multiplication polynomiale 3x^3+x^2+x+2 (modulo x^4+1) avec des octets dans
+    GF(2^8) comme coefficients.
+    Consultez la documentation AES référencée dans les instructions et le site HELMo Learn pour les détails
+    de l'opération.
+    :param r: une colonne composée de 4 octets
+    :return: le résultat de l'opération mix column sous forme de colonne composée de 4 octets
     """
     return [
         multiply_by_2(r[0]) ^ multiply_by_3(r[1]) ^ r[2] ^ r[3],
@@ -85,11 +89,14 @@ def mix_column(r):
 
 def inv_mix_column(r):
     """
-    This function performs polynomial multiplication by 11x^3+13x^2+9x+14 (modulo x^4+1) with bytes in GF(2^8) as coefficient.
-    See the AES documentation referenced in the instructions and the HELMo Learn website for the operation details.
-    :param r: a column composed of 4 bytes
-    :return: the result of mix column as a column composed of 4 bytes
+    Cette fonction effectue la multiplication polynomiale par 11x^3+13x^2+9x+14 (modulo x^4+1) avec des
+    octets dans GF(2^8) comme coefficients.
+    Consultez la documentation AES référencée dans les instructions et le site HELMo Learn pour les détails
+     de l'opération.
+    :param r: une colonne composée de 4 octets
+    :return: le résultat de l'opération mix column sous forme de colonne composée de 4 octets
     """
+
     return [
         multiply_by_14(r[0]) ^ multiply_by_11(r[1]) ^ multiply_by_13(r[2]) ^ multiply_by_9(r[3]),
         multiply_by_9(r[0]) ^ multiply_by_14(r[1]) ^ multiply_by_11(r[2]) ^ multiply_by_13(r[3]),
@@ -100,17 +107,16 @@ def inv_mix_column(r):
 
 def mix_columns(matrix):
     """
-    This function performs the AES mix columns operation on each column of the matrix given as argument.
-    See the AES documentation referenced in the instructions and the HELMo Learn website for the operation details.
-    :param matrix: a 4x4 bytes matrix
-    :return: a 4x4 bytes matrix as the result of the mix columns operation
+    Cette fonction effectue l'opération mix columns d'AES sur chaque colonne de la matrice donnée en
+    argument.
+    Consultez la documentation AES référencée dans les instructions et le site HELMo Learn pour les détails
+    de l'opération.
+    :param matrix: une matrice de 4x4 octets
+    :return: une matrice de 4x4 octets résultant de l'opération mix columns
     """
     for c in range(4):
-        # Extraire la colonne c
         col = [matrix[r][c] for r in range(4)]
-        # Appliquer mix_column sur cette colonne
         mixed_col = mix_column(col)
-        # Remettre la colonne transformée dans la matrice
         for r in range(4):
             matrix[r][c] = mixed_col[r]
     return matrix
@@ -118,17 +124,16 @@ def mix_columns(matrix):
 
 def inv_mix_columns(matrix):
     """
-    This function performs the inverted AES mix columns operation on each column of the matrix given as argument.
-    See the AES documentation referenced in the instructions and the HELMo Learn website for the operation details.
-    :param matrix: a 4x4 bytes matrix
-    :return: a 4x4 bytes matrix as the result of the inverted AES mix columns operation
+    Cette fonction effectue l'opération inverse de mix columns d'AES sur chaque colonne de la matrice donnée
+    en argument.
+    Consultez la documentation AES référencée dans les instructions et le site HELMo Learn pour les détails
+    de l'opération.
+    :param matrix: une matrice de 4x4 octets
+    :return: une matrice de 4x4 octets résultant de l'opération inverse de mix columns d'AES
     """
     for c in range(4):
-        # Extraire la colonne c
         col = [matrix[r][c] for r in range(4)]
-        # Appliquer inv_mix_column sur cette colonne
         mixed_col = inv_mix_column(col)
-        # Remettre la colonne transformée dans la matrice
         for r in range(4):
             matrix[r][c] = mixed_col[r]
     return matrix
@@ -136,11 +141,11 @@ def inv_mix_columns(matrix):
 
 def aes_round(blockmatrix, key_matrix, substitution_box):
     """
-    This function performs a round of the AES by executing all the steps in the prescribed order
-    :param blockmatrix: block to encrypt as 4x4 bytes matrix
-    :param key_matrix: AES key as a 4x4 bytes matrix
-    :param substitution_box: the AES substitution box
-    :return: the block to encrypt, after one round, as 4x4 bytes matrix
+    Cette fonction exécute un tour d'AES en réalisant toutes les étapes dans l'ordre prescrit.
+    :param blockmatrix: bloc à chiffrer sous forme de matrice de 4x4 octets
+    :param key_matrix: clé AES sous forme de matrice de 4x4 octets
+    :param substitution_box: la boîte de substitution AES
+    :return: le bloc à chiffrer, après un tour, sous forme de matrice de 4x4 octets
     """
 
     blockmatrix = sub_bytes(blockmatrix, substitution_box)
@@ -153,11 +158,11 @@ def aes_round(blockmatrix, key_matrix, substitution_box):
 
 def aes_inverse_round(blockmatrix, key_matrix, inverse_substitution_box):
     """
-    This function performs an inverse round of the AES by executing all the steps in the prescribed order
-    :param blockmatrix: block to decrypt as 4x4 bytes matrix
-    :param key_matrix: AES key as a 4x4 bytes matrix
-    :param inverse_substitution_box: the inverted AES substitution box
-    :return: the block to decrypt, after one unversed round, as 4x4 bytes matrix
+    Cette fonction exécute un tour inverse d'AES en réalisant toutes les étapes dans l'ordre prescrit.
+    :param blockmatrix: bloc à déchiffrer sous forme de matrice de 4x4 octets
+    :param key_matrix: clé AES sous forme de matrice de 4x4 octets
+    :param inverse_substitution_box: la boîte de substitution inverse d'AES
+    :return: le bloc à déchiffrer, après un tour inverse, sous forme de matrice de 4x4 octets
     """
 
     blockmatrix = matrix_xor(blockmatrix, key_matrix)
@@ -170,13 +175,12 @@ def aes_inverse_round(blockmatrix, key_matrix, inverse_substitution_box):
 
 def aes_final_round(blockmatrix, key_matrix, substitution_box):
     """
-    This function performs the final round of the AES by executing all the steps in the prescribed order
-    :param blockmatrix: block to encrypt as 4x4 bytes matrix
-    :param key_matrix: AES key as a 4x4 bytes matrix
-    :param substitution_box: the AES substitution box
-    :return: the block to encrypt, after the final round, as 4x4 bytes matrix
+    Cette fonction exécute le dernier tour d'AES en réalisant toutes les étapes dans l'ordre prescrit.
+    :param blockmatrix: bloc à chiffrer sous forme de matrice de 4x4 octets
+    :param key_matrix: clé AES sous forme de matrice de 4x4 octets
+    :param substitution_box: la boîte de substitution AES
+    :return: le bloc à chiffrer, après le dernier tour, sous forme de matrice de 4x4 octets
     """
-
     blockmatrix = sub_bytes(blockmatrix, substitution_box)
     blockmatrix = shift_rows(blockmatrix)
     blockmatrix = matrix_xor(blockmatrix, key_matrix)
@@ -186,13 +190,13 @@ def aes_final_round(blockmatrix, key_matrix, substitution_box):
 
 def aes_inverse_final_round(blockmatrix, key_matrix, inverse_substitution_box):
     """
-    This function performs the inverse final round of the AES by executing all the steps in the prescribed order
-    :param blockmatrix: block to decrypt as 4x4 bytes matrix
-    :param key_matrix: AES key as a 4x4 bytes matrix
-    :param inverse_substitution_box: the inverted AES substitution box
-    :return: the block to decrypt, after the inverse final round, as 4x4 bytes matrix
+    Cette fonction exécute le dernier tour inverse d'AES en réalisant toutes les étapes dans l'ordre
+    prescrit.
+    :param blockmatrix: bloc à déchiffrer sous forme de matrice de 4x4 octets
+    :param key_matrix: clé AES sous forme de matrice de 4x4 octets
+    :param inverse_substitution_box: la boîte de substitution inverse d'AES
+    :return: le bloc à déchiffrer, après le dernier tour inverse, sous forme de matrice de 4x4 octets
     """
-
     blockmatrix = matrix_xor(blockmatrix, key_matrix)
     blockmatrix = inv_shift_rows(blockmatrix)
     blockmatrix = sub_bytes(blockmatrix, inverse_substitution_box)

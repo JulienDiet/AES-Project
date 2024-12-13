@@ -4,8 +4,8 @@ from aes_encryption import aes_encrypt_block, aes_decrypt_block
 
 def rdm_iv_generator():
     """
-    This function must be able to generate a 128-bit random number
-    :return: a randomly generated 128-bit integer.
+    Cette fonction doit être capable de générer un nombre aléatoire de 128 bits.
+    :return: un entier de 128 bits généré aléatoirement.
     """
     iv = os.urandom(16)
     return int.from_bytes(iv, byteorder='big')
@@ -13,26 +13,25 @@ def rdm_iv_generator():
 
 def rdm_iv_generator_with_counter():
     """
-    This function must be able to generate a random number from 96 random most significant bits,
-    leaving the least significant bits at zero for the counter.
-    :return: a randomly generated 128-bit integer.
+    Cette fonction doit être capable de générer un nombre aléatoire à partir de 96 bits les plus
+    significatifs aléatoires,
+    en laissant les bits les moins significatifs à zéro pour le compteur.
+    :return: un entier de 128 bits généré aléatoirement.
     """
-    # Génère 12 octets (96 bits) aléatoires pour les bits les plus significatifs
     random_bits = os.urandom(12)
-    # Convertit les 12 octets en un entier
     random_integer = int.from_bytes(random_bits, byteorder='big')
-    # Ajoute 32 bits à zéro pour le compteur
-    iv = (random_integer << 32)  # Décale à gauche de 32 bits
+    iv = (random_integer << 32)
     return iv
 
 
 def encrypt_ecb(blocks, key, security):
     """
-     This function applies AES encryption to a list of 128-bit blocks using the ECB operating mode.
-    :param blocks: List of blocks (128bits) to be encrypted.
-    :param key: 128/192/256-bit encryption key.
-    :param security: the security AES level which corresponds to the key length as an integer value
-    :return: the list of encrypted blocks.
+    Cette fonction applique le chiffrement AES à une liste de blocs de 128 bits en utilisant le mode de
+    fonctionnement ECB.
+    :param blocks: Liste de blocs (128 bits) à chiffrer.
+    :param key: Clé de chiffrement de 128/192/256 bits.
+    :param security: le niveau de sécurité AES correspondant à la longueur de la clé sous forme d'entier
+    :return: la liste des blocs chiffrés.
     """
     encrypted_blocks = []
     for block in blocks:
@@ -43,12 +42,12 @@ def encrypt_ecb(blocks, key, security):
 
 def decrypt_ecb(blocks, key, security):
     """
-    This function decrypts a list of 128-bit blocks which have been previously encrypted
-    with AES using the ECB mode of operation.
-    :param blocks: List of blocks to be decrypted.
-    :param key: 128/192/256-bit encryption key, identical to that used for encryption.
-    :param security: the security AES level which corresponds to the key length as an integer value
-    :return: the list of decrypted blocks.
+    Cette fonction déchiffre une liste de blocs de 128 bits qui ont été préalablement chiffrés
+    avec AES en utilisant le mode de fonctionnement ECB.
+    :param blocks: Liste de blocs à déchiffrer.
+    :param key: Clé de chiffrement de 128/192/256 bits, identique à celle utilisée pour le chiffrement.
+    :param security: le niveau de sécurité AES correspondant à la longueur de la clé sous forme d'entier
+    :return: la liste des blocs déchiffrés.
     """
     decrypted_blocks = []
     for block in blocks:
@@ -59,11 +58,12 @@ def decrypt_ecb(blocks, key, security):
 
 def encrypt_cbc(blocks, key, security):
     """
-    This function applies AES encryption to a list of 128-bit blocks using the CBC operating mode.
-    :param blocks: List of blocks (128bits) to be encrypted.
-    :param key: 128/192/256-bit encryption key.
-    :param security: the security AES level which corresponds to the key length as an integer value
-    :return: the list of encrypted blocks.
+    Cette fonction applique le chiffrement AES à une liste de blocs de 128 bits en utilisant le mode de
+    fonctionnement CBC.
+    :param blocks: Liste de blocs (128 bits) à chiffrer.
+    :param key: Clé de chiffrement de 128/192/256 bits.
+    :param security: le niveau de sécurité AES correspondant à la longueur de la clé sous forme d'entier
+    :return: la liste des blocs chiffrés.
     """
     iv = rdm_iv_generator()
     encrypted_blocks = []
@@ -80,12 +80,12 @@ def encrypt_cbc(blocks, key, security):
 
 def decrypt_cbc(blocks, key, security):
     """
-    This function decrypts a list of 128-bit blocks which have been previously encrypted
-    with AES using the CBC mode of operation.
-    :param blocks: List of blocks to be decrypted.
-    :param key: 128/192/256-bit encryption key, identical to that used for encryption.
-    :param security: the security AES level which corresponds to the key length as an integer value
-    :return: the list of decrypted blocks.
+    Cette fonction déchiffre une liste de blocs de 128 bits qui ont été préalablement chiffrés
+    avec AES en utilisant le mode de fonctionnement CBC.
+    :param blocks: Liste de blocs à déchiffrer.
+    :param key: Clé de chiffrement de 128/192/256 bits, identique à celle utilisée pour le chiffrement.
+    :param security: le niveau de sécurité AES correspondant à la longueur de la clé sous forme d'entier
+    :return: la liste des blocs déchiffrés.
     """
     iv = blocks[0]
     encrypted_blocks = blocks[1:]
@@ -103,23 +103,21 @@ def decrypt_cbc(blocks, key, security):
 
 def encrypt_pcbc(blocks, key, security):
     """
-     This function applies AES encryption to a list of 128-bit blocks using the PCBC operating mode.
-    :param blocks: List of blocks (128bits) to be encrypted.
-    :param key: 128/192/256-bit encryption key.
-    :param security: the security AES level which corresponds to the key length as an integer value
-    :return: the list of encrypted blocks.
+    Cette fonction applique le chiffrement AES à une liste de blocs de 128 bits en utilisant le mode de
+    fonctionnement PCBC.
+    :param blocks: Liste de blocs (128 bits) à chiffrer.
+    :param key: Clé de chiffrement de 128/192/256 bits.
+    :param security: le niveau de sécurité AES correspondant à la longueur de la clé sous forme d'entier
+    :return: la liste des blocs chiffrés.
     """
-    iv = rdm_iv_generator()  # Generate random IV
+    iv = rdm_iv_generator()
     encrypted_blocks = []
     previous_block = iv
 
     for block in blocks:
-        # XOR the plaintext block with the previous block
         block_to_encrypt = block ^ previous_block
-        # Encrypt the result
         encrypted_block = aes_encrypt_block(block_to_encrypt, key, security)
         encrypted_blocks.append(encrypted_block)
-        # Update the previous block with the XOR of the plaintext and ciphertext
         previous_block = block ^ encrypted_block
 
     return [iv] + encrypted_blocks
@@ -127,40 +125,37 @@ def encrypt_pcbc(blocks, key, security):
 
 def decrypt_pcbc(blocks, key, security):
     """
-    This function decrypts a list of 128-bit blocks which have been previously encrypted
-    with AES using the PCBC mode of operation.
-    :param blocks: List of blocks to be decrypted.
-    :param key: 128/192/256-bit encryption key, identical to that used for encryption.
-    :param security: the security AES level which corresponds to the key length as an integer value
-    :return: the list of decrypted blocks.
+    Cette fonction déchiffre une liste de blocs de 128 bits qui ont été préalablement chiffrés
+    avec AES en utilisant le mode de fonctionnement PCBC.
+    :param blocks: Liste de blocs à déchiffrer.
+    :param key: Clé de chiffrement de 128/192/256 bits, identique à celle utilisée pour le chiffrement.
+    :param security: le niveau de sécurité AES correspondant à la longueur de la clé sous forme d'entier
+    :return: la liste des blocs déchiffrés.
     """
-    iv = blocks[0]  # Extract the IV
+
+    iv = blocks[0]
     encrypted_blocks = blocks[1:]
     decrypted_blocks = []
     previous_block = iv
 
     for encrypted_block in encrypted_blocks:
-        # Decrypt the ciphertext block
         decrypted_block = aes_decrypt_block(encrypted_block, key, security)
-        # XOR the result with the previous block to retrieve the plaintext
         plaintext_block = decrypted_block ^ previous_block
         decrypted_blocks.append(plaintext_block)
-        # Update the previous block with the XOR of the plaintext and ciphertext
         previous_block = plaintext_block ^ encrypted_block
 
     return decrypted_blocks
 
 
-
 def decrypt(blocks, key, security, operation_mode="ECB"):
     """
-    This function decrypts a list of 128-bit blocks which have been previously encrypted
-    with AES according to the mode of operation given as an argument.
-    :param blocks: List of blocks to be decrypted.
-    :param key: 128/192/256-bit encryption key, identical to that used for encryption.
-    :param security: the security AES level which corresponds to the key length as an integer value
-    :param operation_mode: string specifying the operation mode (‘ECB’ or ‘CBC’).
-    :return: the list of decrypted blocks.
+    Cette fonction déchiffre une liste de blocs de 128 bits qui ont été préalablement chiffrés
+    avec AES selon le mode de fonctionnement donné en argument.
+    :param blocks: Liste de blocs à déchiffrer.
+    :param key: Clé de chiffrement de 128/192/256 bits, identique à celle utilisée pour le chiffrement.
+    :param security: le niveau de sécurité AES correspondant à la longueur de la clé sous forme d'entier
+    :param operation_mode: chaîne spécifiant le mode de fonctionnement (‘ECB’ ou ‘CBC’).
+    :return: la liste des blocs déchiffrés.
     """
     if operation_mode == "ECB":
         return decrypt_ecb(blocks, key, security)
@@ -174,13 +169,13 @@ def decrypt(blocks, key, security, operation_mode="ECB"):
 
 def encrypt(blocks, key, security, operation_mode="ECB"):
     """
-    This function encrypts a list of 128-bit blocks
-    with AES according to the mode of operation given as an argument.
-    :param blocks: List of blocks to be decrypted.
-    :param key: the 128/192/256-bit encryption key.
-    :param security: the security AES level which corresponds to the key length as an integer value
-    :param operation_mode: string specifying the operation mode ("ECB", "CBC", "PCBC").
-    :return: the list of encrypted blocks.
+    Cette fonction chiffre une liste de blocs de 128 bits
+    avec AES selon le mode de fonctionnement donné en argument.
+    :param blocks: Liste de blocs à chiffrer.
+    :param key: la clé de chiffrement de 128/192/256 bits.
+    :param security: le niveau de sécurité AES correspondant à la longueur de la clé sous forme d'entier
+    :param operation_mode: chaîne spécifiant le mode de fonctionnement ("ECB", "CBC", "PCBC").
+    :return: la liste des blocs chiffrés.
     """
     if operation_mode == "ECB":
         return encrypt_ecb(blocks, key, security)

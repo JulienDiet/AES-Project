@@ -228,6 +228,7 @@ def dechiffrer_image():
     print(f"L'image {fichier_selectionne} a été déchiffrée.")
     print(f"Mode opératoire sélectionné : {mode_selectionne}")
 
+
 # Press the green button in the gutter to run the script.
 if __name__ == '__main__':
     afficher_menu()

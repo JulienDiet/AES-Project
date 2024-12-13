@@ -17,7 +17,8 @@ def word128bits_to_bytes_matrix(word128bit):
 
 def column_to_matrix(c0, c1, c2, c3):
     """
-    Cette fonction divise les mots de 32 bits en octets et les place dans la colonne correspondante d'une matrice 4x4.
+    Cette fonction divise les mots de 32 bits en octets et les place dans la colonne correspondante d'une
+    matrice 4x4.
     Voir la documentation AES référencée dans les instructions et le site HELMo Learn pour le mapping.
     :param c0: un mot de 32 bits représentant la première colonne de la matrice de sortie
     :param c1: un mot de 32 bits représentant la deuxième colonne de la matrice de sortie

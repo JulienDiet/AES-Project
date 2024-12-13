@@ -3,32 +3,35 @@ from substitution import *
 
 def round_constant():
     """
-    This function returns the 10 first round constants.
-    :return: an array containing the 10 first round constants
+    Cette fonction renvoie les 10 premières constantes de round.
+    :return: un tableau contenant les 10 premières constantes de round
     """
+
     return [0x01, 0x02, 0x04, 0x08, 0x10, 0x20, 0x40, 0x80, 0x1B, 0x36]
 
 
 def rotword(word32bits):
     """
-    This function takes the 8 most significant bits and places them as least significant bits.
-    All other bits move of 8 places from least to most significant.
-    :param word32bits: a 32-bit word to which the rotword is applied
-    :return: the result of the rotword operation as a 32-bit word
+    Cette fonction prend les 8 bits les plus significatifs et les place comme les bits les moins significatifs.
+    Tous les autres bits se déplacent de 8 positions des moins significatifs aux plus significatifs.
+    :param word32bits: un mot de 32 bits auquel l'opération rotword est appliquée
+    :return: le résultat de l'opération rotword sous forme de mot de 32 bits
     """
+
     return (word32bits << 8 | (word32bits >> 24)) & 0xFFFFFFFF
 
 
 def subword(word32bits, substitution_box):
     """
-    This function replaces all the bytes that make up the 32-bit word with the corresponding bytes in the substitution
-    box receive in the argument.
-    :param word32bits: a 32-bit word to which the subword is applied
-    :param substitution_box: the substitution box (table) required for the subword operation
-    :return: the result of the subword operation as a 32-bit word
+    Cette fonction remplace tous les octets qui composent le mot de 32 bits par les octets correspondants dans la boîte
+    de substitution reçue en argument.
+    :param word32bits: un mot de 32 bits auquel l'opération subword est appliquée
+    :param substitution_box: la boîte de substitution (table) nécessaire pour l'opération subword
+    :return: le résultat de l'opération subword sous forme de mot de 32 bits
     """
+
     result = 0
-    for i in range(4):  # Process each byte
+    for i in range(4):
         byte = (word32bits >> (24 - i * 8)) & 0xFF
         substituted_byte = substitution(substitution_box, byte)
         result |= substituted_byte << (24 - i * 8)
@@ -37,13 +40,13 @@ def subword(word32bits, substitution_box):
 
 def original_key_to_word32bits(original_key, length):
     """
-    This function splits the key into 32-bit words. The words are placed in an array
-    starting with the most significant 32-bit word.
-    :param original_key: 128/192/256-bit key
-    :param length: the number of bits as an integer value
-    :return: an array containing the 32-bit words that make up the key
+    Cette fonction divise la clé en mots de 32 bits. Les mots sont placés dans un tableau
+    en commençant par le mot de 32 bits le plus significatif.
+    :param original_key: clé de 128/192/256 bits
+    :param length: le nombre de bits sous forme d'entier
+    :return: un tableau contenant les mots de 32 bits qui composent la clé
     """
-    # Si original_key est un entier, on le convertit en bytes
+
     if isinstance(original_key, int):
         original_key = original_key.to_bytes(length // 8, 'big')
 
@@ -65,16 +68,18 @@ def original_key_to_word32bits(original_key, length):
 
 def key_schedule(original_key, length, substitution_box):
     """
-    This function implements the key schedule:
-    (i) obtains the round constants
-    (ii) converts the original key into a 32-bit word
-    (iii) determines the number of 32-bit words from the key and the number of AES rounds
-    (iv) executes the key schedule to build all the 32-bit words that make up the AES round keys
-    :param original_key: 128/192/256-bit key
-    :param length: the number of bits as an integer value
-    :param substitution_box: the substitution box (table) required for the key schedule operation
-    :return: an array containing the 32-bit words that make up the AES round keys.
+    Cette fonction implémente le programme de génération de clés :
+    (i) obtient les constantes de round
+    (ii) convertit la clé originale en mots de 32 bits
+    (iii) détermine le nombre de mots de 32 bits à partir de la clé et le nombre de tours AES
+    (iv) exécute le programme de génération de clés pour construire tous les mots de 32 bits qui composent
+    les clés des tours AES
+    :param original_key: clé de 128/192/256 bits
+    :param length: le nombre de bits sous forme d'entier
+    :param substitution_box: la boîte de substitution (table) nécessaire pour l'opération de génération de clés
+    :return: un tableau contenant les mots de 32 bits qui composent les clés des tours AES.
     """
+
     round_constants = round_constant()
     words = original_key_to_word32bits(original_key, length)
 
