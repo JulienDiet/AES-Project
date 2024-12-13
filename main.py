@@ -228,13 +228,6 @@ def dechiffrer_image():
     print(f"L'image {fichier_selectionne} a été déchiffrée.")
     print(f"Mode opératoire sélectionné : {mode_selectionne}")
 
-
-
+# Press the green button in the gutter to run the script.
 if __name__ == '__main__':
-    while True:
-        afficher_menu()
-        choix = input("Souhaitez-vous effectuer une autre opération ? (oui/non) : ").strip().lower()
-        if choix == 'non':
-            print("Au revoir !")
-            break
-
+    afficher_menu()

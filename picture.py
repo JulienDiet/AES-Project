@@ -79,9 +79,31 @@ def encrypt_image(path, key, security, operation_mode="ECB"):
 
     if not operation_mode == "ECB":
         iv_dict[filename] = cipher_bytes[:16]
+        print("Generated iv : ", hex(int.from_bytes(iv_dict[filename], "big")))
         cipher_bytes = cipher_bytes[16:]
 
     image_from_bytes_to_file(cipher_bytes, img_shape, os.path.join(directory, filename))
+
+def demander_iv_aes():
+    """
+    Demande à l'utilisateur d'encoder la clé AES de chiffrement en hexadécimal.
+    Capture et renvoie la clé sous forme d'octets (bytes).
+    """
+    cle_hex = input("Veuillez entrer l'IV en hexadécimal : ").strip()
+
+    # Vérification que la clé est valide (longueur 128, 192 ou 256 bits en hexadécimal)
+    try:
+        # Vérifier si la longueur correspond à 128, 192 ou 256 bits (32, 48 ou 64 caractères hexadécimaux)
+        if len(cle_hex) not in [32]:
+            raise ValueError("La clé doit être de 128, 192 ou 256 bits (32, 48 ou 64 caractères hexadécimaux).")
+
+        # Convertir la clé hexadécimale en bytes
+        cle_bytes = bytes.fromhex(cle_hex)
+        return cle_bytes
+
+    except ValueError as e:
+        print(f"Erreur : {e}")
+        return demander_iv_aes()  # Redemander la clé si elle est invalide
 
 
 def decrypt_image(path, key, security, operation_mode="ECB"):
@@ -90,7 +112,7 @@ def decrypt_image(path, key, security, operation_mode="ECB"):
 
     cipher_bytes, img_shape = image_from_file_to_bytes(path)
     if not operation_mode == "ECB":
-        cipher_bytes = iv_dict[filename] + cipher_bytes
+        cipher_bytes = demander_iv_aes() + cipher_bytes
 
     image_bytes = decrypt_bytes(cipher_bytes, key, security, operation_mode)
 
