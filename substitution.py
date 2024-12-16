@@ -1,4 +1,4 @@
-def load_substitution_box():
+def load_substitutionBox():
     """
     Cette fonction charge les valeurs du fichier "data.txt" et les place dans une matrice 16x16.
     :return: une matrice 16x16 correspondant à la boîte de substitution AES

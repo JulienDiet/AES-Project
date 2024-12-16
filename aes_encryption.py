@@ -1,7 +1,7 @@
 from data_structure import *
 from aes_key_schedule import *
 from roundfunction import *
-from substitution import inverse_substitution_box, load_substitution_box
+from substitution import inverse_substitution_box, load_substitutionBox
 
 
 def compute_round_count(aes_key_length):
@@ -30,7 +30,7 @@ def aes_encrypt_block(block, key, aes_key_length):
     :return: le bloc chiffré de 128 bits
     """
 
-    substitution_box = load_substitution_box()
+    substitution_box = load_substitutionBox()
     round_keys = key_schedule(key, aes_key_length, substitution_box)
     num_rounds = compute_round_count(aes_key_length)
 
@@ -58,7 +58,7 @@ def aes_decrypt_block(block, key, aes_key_length):
     :return: le bloc déchiffré de 128 bits
     """
 
-    substitution_box = load_substitution_box()
+    substitution_box = load_substitutionBox()
     inverse = inverse_substitution_box(substitution_box)
     round_keys = key_schedule(key, aes_key_length, substitution_box)
     num_rounds = compute_round_count(aes_key_length)
